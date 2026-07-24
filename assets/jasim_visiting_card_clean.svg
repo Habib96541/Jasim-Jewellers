@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 550" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14110d"/>
+      <stop offset="50%" stop-color="#0b0a08"/>
+      <stop offset="100%" stop-color="#1a140b"/>
+    </linearGradient>
+
+    <linearGradient id="goldBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF2B2"/>
+      <stop offset="30%" stop-color="#D4AF37"/>
+      <stop offset="70%" stop-color="#AA771C"/>
+      <stop offset="100%" stop-color="#FFF5C0"/>
+    </linearGradient>
+
+    <linearGradient id="goldChevron" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFEAA7"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8E6111"/>
+    </linearGradient>
+
+    <linearGradient id="redTextGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF4D4D"/>
+      <stop offset="50%" stop-color="#CC0000"/>
+      <stop offset="100%" stop-color="#800000"/>
+    </linearGradient>
+
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Card Frame -->
+  <rect x="10" y="10" width="980" height="530" rx="16" fill="url(#cardBg)" stroke="url(#goldBorderGrad)" stroke-width="10"/>
+  <rect x="25" y="25" width="950" height="500" rx="12" fill="none" stroke="url(#goldBorderGrad)" stroke-width="2" stroke-dasharray="8 4"/>
+
+  <!-- Top Geometric Chevron Logo Area (matching card top graphics) -->
+  <g transform="translate(500, 35)">
+    <!-- Layered Chevrons -->
+    <path d="M-120,0 L0,-60 L120,0 L0,60 Z" fill="url(#goldChevron)" opacity="0.9"/>
+    <path d="M-90,0 L0,-45 L90,0 L0,45 Z" fill="#0b0a08"/>
+    <path d="M-65,0 L0,-32 L65,0 L0,32 Z" fill="url(#goldChevron)"/>
+    <path d="M-40,0 L0,-20 L40,0 L0,20 Z" fill="#0b0a08"/>
+
+    <!-- Bottom interlocking chevrons -->
+    <path d="M-140,50 L0,-20 L140,50 L0,120 Z" fill="url(#goldChevron)" opacity="0.4"/>
+  </g>
+
+  <!-- Left Side Jewelry Display Illustrations -->
+  <g transform="translate(60, 60)">
+    <!-- Gold Necklace / Ring / Earring Silhouettes -->
+    <!-- Necklace 1 -->
+    <path d="M50,40 Q100,120 150,40" fill="none" stroke="url(#goldChevron)" stroke-width="4"/>
+    <polygon points="100,120 112,145 100,165 88,145" fill="url(#goldChevron)"/>
+
+    <!-- Necklace 2 -->
+    <path d="M40,110 Q100,190 160,110" fill="none" stroke="#fff" stroke-width="3" opacity="0.9"/>
+    <circle cx="100" cy="185" r="10" fill="url(#goldChevron)"/>
+
+    <!-- Necklace 3 -->
+    <path d="M30,170 Q100,260 170,170" fill="none" stroke="url(#goldChevron)" stroke-width="4"/>
+    <path d="M90,240 Q100,280 110,240 Z" fill="#fff"/>
+
+    <!-- Bangles & Rings -->
+    <ellipse cx="60" cy="320" rx="30" ry="18" fill="none" stroke="url(#goldChevron)" stroke-width="6"/>
+    <ellipse cx="140" cy="320" rx="30" ry="18" fill="none" stroke="url(#goldChevron)" stroke-width="6"/>
+    <ellipse cx="100" cy="350" rx="35" ry="20" fill="none" stroke="url(#goldChevron)" stroke-width="8"/>
+    
+    <!-- Earrings -->
+    <path d="M70,400 L70,430 M60,430 L80,430 L70,455 Z" fill="url(#goldChevron)" stroke="url(#goldChevron)"/>
+    <path d="M130,400 L130,430 M120,430 L140,430 L130,455 Z" fill="url(#goldChevron)" stroke="url(#goldChevron)"/>
+  </g>
+
+  <!-- Center & Right Typography Area -->
+  
+  <!-- Proprietor Text -->
+  <text x="720" y="105" font-family="'Cinzel', serif" font-size="22" font-weight="bold" fill="#FFEAA7" text-anchor="middle">
+    Proprietor:
+  </text>
+  <text x="720" y="135" font-family="'Hind Siliguri', 'Segoe UI', sans-serif" font-size="26" font-weight="bold" fill="#FFF2B2" text-anchor="middle">
+    Jasim Uddin Bhuiyan
+  </text>
+
+  <!-- Main Shop Name in Bangla (জসিম জুয়েলার্স) -->
+  <g transform="translate(620, 220)">
+    <!-- Red text with white outline effect -->
+    <text x="0" y="0" font-family="'Hind Siliguri', sans-serif" font-size="78" font-weight="900" fill="url(#redTextGrad)" stroke="#FFFFFF" stroke-width="3" text-anchor="middle" filter="url(#goldGlow)">
+      জসিম জুয়েলার্স
+    </text>
+  </g>
+
+  <!-- Services Text Line -->
+  <text x="620" y="275" font-family="'Hind Siliguri', sans-serif" font-size="21" font-weight="bold" fill="#FFFFFF" text-anchor="middle">
+    এখানে ২১ ক্যারেট ও ২২ ক্যারেট স্বর্ণের অলংকার তৈরি ও ক্রয় করা হয়।
+  </text>
+
+  <!-- Notice Badge (স্বর্ণালংকার বন্ধক রাখা হয়) -->
+  <g transform="translate(620, 310)">
+    <rect x="-240" y="0" width="480" height="42" rx="8" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>
+    <text x="0" y="28" font-family="'Hind Siliguri', sans-serif" font-size="21" font-weight="900" fill="#000000" text-anchor="middle">
+      বি: দ্র: এখানে স্বর্ণালংকার বন্ধক রাখা হয়।
+    </text>
+  </g>
+
+  <!-- Address Line -->
+  <text x="620" y="390" font-family="'Hind Siliguri', sans-serif" font-size="22" font-weight="bold" fill="#FFF2B2" text-anchor="middle">
+    ফেরদৌস মার্কেট, খিলক্ষেত বাজার, খিলক্ষেত, ঢাকা-১২২৯।
+  </text>
+
+  <!-- Mobile Numbers Line -->
+  <text x="620" y="430" font-family="'Outfit', sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF" text-anchor="middle">
+    Mob: 01819-119014, 01928-706691
+  </text>
+
+  <!-- Bottom Icons Area (Om Medallion + Dome Symbol) -->
+  <g transform="translate(320, 465)">
+    <!-- Om Circle Medallion -->
+    <circle cx="0" cy="0" r="26" fill="#FFF2B2" stroke="#D4AF37" stroke-width="3"/>
+    <text x="0" y="10" font-family="sans-serif" font-size="28" font-weight="bold" fill="#000000" text-anchor="middle">ওঁ</text>
+  </g>
+
+  <g transform="translate(420, 465)">
+    <!-- Dome Symbol -->
+    <path d="M-18,15 C-18,-10 0,-25 0,-25 C0,-25 18,-10 18,15 Z" fill="#2ECC71" stroke="#27AE60" stroke-width="2"/>
+    <rect x="-22" y="15" width="44" height="6" fill="#F1C40F"/>
+  </g>
+
+  <g transform="translate(510, 465)">
+    <!-- Flag / Hallmark Icon -->
+    <polygon points="-12,-15 15,-5 -12,5" fill="#E74C3C"/>
+    <line x1="-12" y1="-20" x2="-12" y2="20" stroke="#FFFFFF" stroke-width="3"/>
+  </g>
+</svg>
