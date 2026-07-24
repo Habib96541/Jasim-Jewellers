@@ -130,9 +130,14 @@
   <section class="rates-section" id="rates">
     <div class="container">
       <div class="section-header text-center">
-        <span class="sub-heading"><i class="fa-solid fa-scale-balanced"></i> আজকের বাজার দর</span>
+        <span class="sub-heading"><i class="fa-solid fa-scale-balanced"></i> আজকের লাইভ ডায়নামিক দর</span>
         <h2 class="section-title">বাংলাদেশে বর্তমান স্বর্ণ ও রুপার দর (BDT)</h2>
-        <p class="section-desc">বাংলাদেশ জুয়েলার্স সমিতি (BAJUS) নির্দেশিত সর্বশেষ হালনাগাদকৃত বাজার মূল্য</p>
+        <p class="section-desc" id="liveRateSourceBadge">🟢 BAJUS নির্দেশিত লাইভ বাজার দর</p>
+        <div style="margin-top: 15px;">
+          <button class="btn btn-outline" id="openRateControlModal" style="padding: 8px 20px; font-size: 0.9rem;">
+            <i class="fa-solid fa-arrows-rotate"></i> সোনার লাইভ দর এডিট / অটো-রিফ্রেশ
+          </button>
+        </div>
       </div>
 
       <div class="rates-grid">
@@ -708,6 +713,37 @@
       <i class="fa-solid fa-comments"></i>
       <span class="chat-badge-pulse"></span>
     </button>
+  </div>
+
+  <!-- Live Rate Control & Auto Update Modal -->
+  <div class="modal-overlay" id="rateControlModal">
+    <div class="modal-content luxury-card" style="max-width: 500px;">
+      <button class="close-modal-btn" id="closeRateControlModal">&times;</button>
+      <div class="modal-header text-center">
+        <h2><i class="fa-solid fa-sliders"></i> লাইভ সোনার দর নিয়ন্ত্রণ</h2>
+        <p style="font-size: 0.9rem; color: var(--gold-light); margin-top: 5px;">সোনার দাম পরিবর্তন হলে এখানে আপডেট করুন, ওয়েবসাইটের সব দাম স্বয়ংক্রিয়ভাবে পরিবর্তিত হবে</p>
+      </div>
+
+      <form id="liveRateForm">
+        <div class="form-group">
+          <label>২২ ক্যারেট সোনার দাম (প্রতি ভরি BDT):</label>
+          <input type="number" id="input22k" required min="50000" max="300000" step="500">
+        </div>
+        <div class="form-group">
+          <label>২১ ক্যারেট সোনার দাম (প্রতি ভরি BDT):</label>
+          <input type="number" id="input21k" required min="50000" max="300000" step="500">
+        </div>
+        <div class="form-group">
+          <label>১৮ ক্যারেট সোনার দাম (প্রতি ভরি BDT):</label>
+          <input type="number" id="input18k" required min="40000" max="300000" step="500">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+          <button type="submit" class="btn btn-gold-solid w-100"><i class="fa-solid fa-check-circle"></i> নতুন দর লাইভ প্রয়োগ করুন</button>
+          <button type="button" class="btn btn-outline w-100" id="fetchApiRateBtn" title="গ্লোবাল মার্কেট এপিআই থেকে রেট আনুন"><i class="fa-solid fa-cloud-arrow-down"></i> গ্লোবাল গোল্ড এপিআই অটো-ফেচ</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Scripts -->
