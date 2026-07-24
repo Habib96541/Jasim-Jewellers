@@ -286,7 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupNavigation();
   setupModals();
   setupChatBot();
-  setupLiveRateControls();
 });
 
 function setupLiveRateControls() {
