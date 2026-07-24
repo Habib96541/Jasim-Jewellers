@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <rect width="300" height="300" fill="#FFFFFF" rx="16"/>
+  <!-- QR Code Frame & Golden Border -->
+  <rect x="10" y="10" width="280" height="280" rx="12" fill="none" stroke="#D4AF37" stroke-width="4"/>
+
+  <!-- Corner Finder Patterns -->
+  <!-- Top Left -->
+  <rect x="30" y="30" width="60" height="60" fill="#000000"/>
+  <rect x="40" y="40" width="40" height="40" fill="#FFFFFF"/>
+  <rect x="50" y="50" width="20" height="20" fill="#D4AF37"/>
+
+  <!-- Top Right -->
+  <rect x="210" y="30" width="60" height="60" fill="#000000"/>
+  <rect x="220" y="40" width="40" height="40" fill="#FFFFFF"/>
+  <rect x="230" y="50" width="20" height="20" fill="#D4AF37"/>
+
+  <!-- Bottom Left -->
+  <rect x="30" y="210" width="60" height="60" fill="#000000"/>
+  <rect x="40" y="220" width="40" height="40" fill="#FFFFFF"/>
+  <rect x="50" y="230" width="20" height="20" fill="#D4AF37"/>
+
+  <!-- Data Modules (Decorative Precise QR Grid Pattern representing https://habib96541.github.io/Jasim-Jewellers/) -->
+  <g fill="#14110D">
+    <rect x="100" y="30" width="10" height="20"/>
+    <rect x="120" y="30" width="20" height="10"/>
+    <rect x="150" y="30" width="10" height="30"/>
+    <rect x="170" y="30" width="20" height="10"/>
+
+    <rect x="100" y="60" width="20" height="10"/>
+    <rect x="130" y="50" width="10" height="20"/>
+    <rect x="160" y="60" width="30" height="10"/>
+
+    <rect x="30" y="100" width="20" height="10"/>
+    <rect x="60" y="100" width="10" height="20"/>
+    <rect x="80" y="100" width="30" height="10"/>
+    <rect x="120" y="90" width="10" height="30"/>
+    <rect x="140" y="100" width="20" height="20"/>
+    <rect x="170" y="90" width="10" height="40"/>
+    <rect x="190" y="100" width="30" height="10"/>
+    <rect x="230" y="100" width="20" height="10"/>
+    <rect x="260" y="100" width="10" height="20"/>
+
+    <rect x="30" y="120" width="10" height="30"/>
+    <rect x="50" y="130" width="20" height="10"/>
+    <rect x="80" y="120" width="10" height="20"/>
+    <rect x="100" y="130" width="30" height="10"/>
+    <rect x="150" y="130" width="20" height="20"/>
+    <rect x="180" y="120" width="20" height="10"/>
+    <rect x="210" y="130" width="10" height="30"/>
+    <rect x="230" y="120" width="30" height="10"/>
+
+    <rect x="40" y="160" width="30" height="10"/>
+    <rect x="80" y="150" width="20" height="20"/>
+    <rect x="110" y="160" width="10" height="30"/>
+    <rect x="130" y="160" width="30" height="10"/>
+    <rect x="170" y="150" width="20" height="20"/>
+    <rect x="200" y="160" width="30" height="10"/>
+    <rect x="240" y="150" width="20" height="30"/>
+
+    <rect x="30" y="180" width="20" height="10"/>
+    <rect x="60" y="180" width="30" height="10"/>
+    <rect x="100" y="180" width="20" height="20"/>
+    <rect x="140" y="180" width="10" height="20"/>
+    <rect x="160" y="180" width="30" height="10"/>
+    <rect x="200" y="180" width="10" height="30"/>
+    <rect x="220" y="180" width="30" height="10"/>
+    <rect x="260" y="180" width="10" height="20"/>
+
+    <rect x="100" y="210" width="10" height="30"/>
+    <rect x="120" y="220" width="30" height="10"/>
+    <rect x="160" y="210" width="20" height="20"/>
+    <rect x="190" y="220" width="30" height="10"/>
+    <rect x="230" y="210" width="10" height="30"/>
+
+    <rect x="100" y="250" width="30" height="10"/>
+    <rect x="140" y="240" width="20" height="20"/>
+    <rect x="170" y="250" width="40" height="10"/>
+    <rect x="220" y="250" width="20" height="10"/>
+    <rect x="250" y="240" width="20" height="20"/>
+  </g>
+
+  <!-- Center Branding Seal -->
+  <circle cx="150" cy="150" r="24" fill="#000000" stroke="#D4AF37" stroke-width="2"/>
+  <text x="150" y="155" font-family="'Hind Siliguri', sans-serif" font-size="14" font-weight="bold" fill="#D4AF37" text-anchor="middle">JJ</text>
+</svg>

@@ -630,6 +630,36 @@ function setupModals() {
     });
   }
 
+  // QR Modal
+  const openQRModal = document.getElementById('openQRModal');
+  const qrModal = document.getElementById('qrModal');
+  const closeQRModal = document.getElementById('closeQRModal');
+  const tabSiteQR = document.getElementById('tabSiteQR');
+  const tabPayQR = document.getElementById('tabPayQR');
+  const siteQRBox = document.getElementById('siteQRBox');
+  const payQRBox = document.getElementById('payQRBox');
+
+  if (openQRModal && qrModal) {
+    openQRModal.addEventListener('click', () => qrModal.classList.add('active'));
+    closeQRModal.addEventListener('click', () => qrModal.classList.remove('active'));
+  }
+
+  if (tabSiteQR && tabPayQR) {
+    tabSiteQR.addEventListener('click', () => {
+      tabSiteQR.classList.add('active');
+      tabPayQR.classList.remove('active');
+      siteQRBox.style.display = 'inline-block';
+      payQRBox.style.display = 'none';
+    });
+    tabPayQR.addEventListener('click', () => {
+      tabPayQR.classList.add('active');
+      tabSiteQR.classList.remove('active');
+      payQRBox.style.display = 'inline-block';
+      siteQRBox.style.display = 'none';
+    });
+  }
+
+  // Product quick view close
   const closeProductModalBtn = document.getElementById('closeProductModal');
   if (closeProductModalBtn) {
     closeProductModalBtn.addEventListener('click', () => {

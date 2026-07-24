@@ -77,6 +77,9 @@
       </nav>
 
       <div class="header-actions">
+        <button class="btn btn-outline" id="openQRModal" style="padding: 8px 14px; font-size: 0.88rem;" title="क्यूআর কোড স্ক্যানার">
+          <i class="fa-solid fa-qrcode"></i> স্ক্যানার
+        </button>
         <button class="cart-btn" id="openCartBtn" title="শপিং কার্ট">
           <i class="fa-solid fa-bag-shopping"></i>
           <span class="cart-count" id="cartCount">0</span>
@@ -743,6 +746,39 @@
           <button type="button" class="btn btn-outline w-100" id="fetchApiRateBtn" title="গ্লোবাল মার্কেট এপিআই থেকে রেট আনুন"><i class="fa-solid fa-cloud-arrow-down"></i> গ্লোবাল গোল্ড এপিআই অটো-ফেচ</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- QR Code & Payment Scanner Modal -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-content luxury-card text-center" style="max-width: 520px;">
+      <button class="close-modal-btn" id="closeQRModal">&times;</button>
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-qrcode"></i> জসিম জুয়েলার্স QR স্ক্যানার</h2>
+        <p style="font-size: 0.9rem; color: var(--gold-light);">স্মার্টফোনের ক্যামেরা দিয়ে স্ক্যান করে সরাসরি সাইটে প্রবেশ অথবা পেমেন্ট করুন</p>
+      </div>
+
+      <div class="qr-tabs" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
+        <button class="filter-btn active" id="tabSiteQR">📱 ওয়েবসাইট QR</button>
+        <button class="filter-btn" id="tabPayQR">💸 bKash/Nagad পেমেন্ট QR</button>
+      </div>
+
+      <div id="siteQRBox" style="background: #fff; padding: 20px; border-radius: 16px; display: inline-block; border: 3px solid var(--gold-primary);">
+        <img src="assets/site_qr_code.svg" alt="Website QR Code" style="width: 220px; height: 220px; display: block; margin: 0 auto;">
+        <p style="color: #000; font-weight: 700; font-size: 0.85rem; margin-top: 10px;">https://habib96541.github.io/Jasim-Jewellers/</p>
+      </div>
+
+      <div id="payQRBox" style="background: #fff; padding: 20px; border-radius: 16px; display: none; border: 3px solid #E63946;">
+        <img src="assets/site_qr_code.svg" alt="Payment QR Code" style="width: 200px; height: 200px; display: block; margin: 0 auto; filter: hue-rotate(320deg);">
+        <div style="color: #000; margin-top: 10px;">
+          <strong style="color: #D12053; font-size: 1.1rem;">bKash / Nagad Personal</strong><br>
+          <span style="font-size: 1.2rem; font-weight: 800;">01819-119014</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
+        <p><i class="fa-solid fa-camera"></i> আপনার মোবাইলের ক্যামেরা চালু করে উপরে স্ক্যান করুন</p>
+      </div>
     </div>
   </div>
 
