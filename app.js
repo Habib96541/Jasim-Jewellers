@@ -1,9 +1,9 @@
 /* ==========================================================================
-   Jasim Jewellers - Fully Dynamic Real-Time Gold Pricing & Automated Chat Engine
+   Jasim Jewellers - Fully Dynamic Real-Time Gold Pricing (1-Hour Auto Update)
    ========================================================================== */
 
-// 1 Vori = 16 Ana = 96 Ratti = 11.664 Grams
 const GRAMS_PER_VORI = 11.664;
+const ONE_HOUR_MS = 60 * 60 * 1000; // 1 Hour in milliseconds
 
 // Default initial rates (BAJUS standard BDT per Vori)
 let DYNAMIC_GOLD_RATES = JSON.parse(localStorage.getItem('jasim_live_rates')) || {
@@ -11,6 +11,7 @@ let DYNAMIC_GOLD_RATES = JSON.parse(localStorage.getItem('jasim_live_rates')) ||
   21: { vori: 135700, gram: 11634.09, ana: 8481.25 },
   18: { vori: 116300, gram: 9970.85, ana: 7268.75 },
   silver: { vori: 2100, gram: 180.04 },
+  lastUpdatedTimestamp: Date.now(),
   lastUpdated: new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }),
   source: 'BAJUS নির্দেশিত বাজার দর'
 };
@@ -26,10 +27,9 @@ function formatBDT(amount) {
 // --- FETCH REAL-TIME LIVE SPOT GOLD PRICE FROM API ---
 async function fetchLiveGoldPriceFromAPI() {
   const liveBadge = document.getElementById('liveRateSourceBadge');
-  if (liveBadge) liveBadge.textContent = '🔄 গ্লোবাল গোল্ড রেট লোড হচ্ছে...';
+  if (liveBadge) liveBadge.textContent = '🔄 গ্লোবাল গোল্ড এপিআই থেকে ১ ঘণ্টার আপডেট নেওয়া হচ্ছে...';
 
   try {
-    // Fetch live XAU/USD gold price and USD to BDT exchange rate
     const [goldRes, fxRes] = await Promise.all([
       fetch('https://api.gold-api.com/price/XAU').catch(() => null),
       fetch('https://api.exchangerate-api.com/v4/latest/USD').catch(() => null)
@@ -42,10 +42,9 @@ async function fetchLiveGoldPriceFromAPI() {
       const pricePerOunceUSD = goldData.price; // e.g. $2400/oz
       const bdtFxRate = fxData.rates.BDT || 118; // USD to BDT
 
-      // 1 Troy Ounce = 31.1034768 Grams = 2.6666 Vori
+      // 1 Troy Ounce = 31.1034768 Grams
       const pricePerGram24K_BDT = (pricePerOunceUSD * bdtFxRate) / 31.1034768;
       
-      // Calculate 22K (91.6%) and 21K (87.5%) per vori
       const vori22K = Math.round(pricePerGram24K_BDT * 0.916 * GRAMS_PER_VORI);
       const vori21K = Math.round(pricePerGram24K_BDT * 0.875 * GRAMS_PER_VORI);
       const vori18K = Math.round(pricePerGram24K_BDT * 0.750 * GRAMS_PER_VORI);
@@ -54,15 +53,14 @@ async function fetchLiveGoldPriceFromAPI() {
         22: vori22K,
         21: vori21K,
         18: vori18K,
-        source: 'লাইভ গ্লোবাল মার্কেট এপিআই'
+        source: 'গ্লোবাল লাইভ গোল্ড এপিআই (প্রতি ১ ঘণ্টায় স্বয়ংক্রিয় হালনাগাদ)'
       });
       return;
     }
   } catch (err) {
-    console.log('Live API fallback to local storage or standard rate:', err);
+    console.log('Live API fetch error, fallback to current stored rate:', err);
   }
 
-  // Fallback if API offline or blocked: keep current dynamic rates
   refreshUIWithCurrentRates();
 }
 
@@ -92,11 +90,29 @@ function updateRates(newRates) {
     };
   }
 
+  DYNAMIC_GOLD_RATES.lastUpdatedTimestamp = Date.now();
   DYNAMIC_GOLD_RATES.lastUpdated = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
   if (newRates.source) DYNAMIC_GOLD_RATES.source = newRates.source;
 
   localStorage.setItem('jasim_live_rates', JSON.stringify(DYNAMIC_GOLD_RATES));
   refreshUIWithCurrentRates();
+}
+
+function checkAndAutoUpdatePriceEveryHour() {
+  const lastFetch = DYNAMIC_GOLD_RATES.lastUpdatedTimestamp || 0;
+  const timeElapsed = Date.now() - lastFetch;
+
+  // Auto-fetch if 1 hour has passed since last update
+  if (timeElapsed >= ONE_HOUR_MS) {
+    fetchLiveGoldPriceFromAPI();
+  } else {
+    refreshUIWithCurrentRates();
+  }
+
+  // Set recurring 1-hour interval timer (3600000 ms)
+  setInterval(() => {
+    fetchLiveGoldPriceFromAPI();
+  }, ONE_HOUR_MS);
 }
 
 function refreshUIWithCurrentRates() {
@@ -118,7 +134,9 @@ function refreshUIWithCurrentRates() {
   if (r21g) r21g.textContent = formatBDT(DYNAMIC_GOLD_RATES[21].gram);
 
   const liveBadge = document.getElementById('liveRateSourceBadge');
-  if (liveBadge) liveBadge.textContent = `🟢 ${DYNAMIC_GOLD_RATES.source} (${DYNAMIC_GOLD_RATES.lastUpdated})`;
+  if (liveBadge) {
+    liveBadge.innerHTML = `🟢 ${DYNAMIC_GOLD_RATES.source} <br><small style="color: var(--gold-light);">সর্বশেষ আপডেট: ${DYNAMIC_GOLD_RATES.lastUpdated} | ⏱️ প্রতি ১ ঘণ্টায় স্বয়ংক্রিয় রিফ্রেশ সচল</small>`;
+  }
 
   // Re-render Catalog with new dynamic rates
   renderProducts(currentCategory);
@@ -239,16 +257,12 @@ const PRODUCTS = [
   }
 ];
 
-// --- STATE MANAGEMENT ---
 let cart = JSON.parse(localStorage.getItem('jasim_cart')) || [];
 let currentCategory = 'all';
 
-// DYNAMIC PRICING CALCULATOR FUNCTION
 function getProductPricing(product) {
   const totalVori = calculateVori(product.vori, product.ana, product.ratti);
   const grams = totalVori * GRAMS_PER_VORI;
-  
-  // DYNAMIC LIVE RATE APPLICATION
   const voriRate = DYNAMIC_GOLD_RATES[product.karat] ? DYNAMIC_GOLD_RATES[product.karat].vori : 142200;
   const baseGoldPrice = totalVori * voriRate;
   const makingCharge = totalVori * (product.makingPerVori || 4000);
@@ -263,9 +277,9 @@ function getProductPricing(product) {
   };
 }
 
-// --- INITIALIZATION & EVENT LISTENERS ---
+// --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
-  fetchLiveGoldPriceFromAPI();
+  checkAndAutoUpdatePriceEveryHour();
   renderProducts('all');
   updateCartUI();
   setupCalculator();
@@ -275,7 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupLiveRateControls();
 });
 
-// --- LIVE RATE CONTROL PANEL (Manual / Auto Refresh) ---
 function setupLiveRateControls() {
   const openRateModalBtn = document.getElementById('openRateControlModal');
   const rateModal = document.getElementById('rateControlModal');
@@ -303,11 +316,11 @@ function setupLiveRateControls() {
         22: v22,
         21: v21,
         18: v18,
-        source: 'ম্যানুয়াল আপডেট (BAJUS / দোকানদার)'
+        source: 'ম্যানুয়াল ইনপুট (BAJUS / দোকানদার)'
       });
 
       rateModal.classList.remove('active');
-      alert('✅ সোনার দর সফলভাবে আপডেট করা হয়েছে! পুরো ওয়েবসাইটের অলংকারের দাম নতুন দরে হিসাব করা হয়েছে।');
+      alert('✅ সোনার দর সফলভাবে আপডেট করা হয়েছে!');
     });
   }
 
@@ -315,13 +328,12 @@ function setupLiveRateControls() {
   if (fetchLiveBtn) {
     fetchLiveBtn.addEventListener('click', async () => {
       await fetchLiveGoldPriceFromAPI();
-      alert('✨ গ্লোবাল লাইভ এপিআই থেকে আজকের সোনার নতুন দর আপডেট করা হয়েছে!');
+      alert('✨ ১ ঘণ্টার নতুন লাইভ সোনার দর গ্লোবাল মার্কেট থেকে আপডেট করা হয়েছে!');
       if (rateModal) rateModal.classList.remove('active');
     });
   }
 }
 
-// --- RENDER PRODUCTS GRID ---
 function renderProducts(category = 'all') {
   currentCategory = category;
   const grid = document.getElementById('productGrid');
@@ -373,7 +385,6 @@ function renderProducts(category = 'all') {
   }).join('');
 }
 
-// --- CALCULATOR ENGINE ---
 function setupCalculator() {
   const voriInput = document.getElementById('calcVori');
   const anaInput = document.getElementById('calcAna');
@@ -393,7 +404,6 @@ function setupCalculator() {
     const totalVori = calculateVori(vori, ana, ratti);
     const totalGrams = totalVori * GRAMS_PER_VORI;
 
-    // DYNAMIC RATE CALCULATION
     const currentRateForKarat = DYNAMIC_GOLD_RATES[karat] ? DYNAMIC_GOLD_RATES[karat].vori : 142200;
 
     const baseGoldPrice = totalVori * currentRateForKarat;
@@ -449,7 +459,6 @@ function setupCalculator() {
   }
 }
 
-// --- CART FUNCTIONS ---
 function addToCart(productId) {
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
@@ -544,7 +553,6 @@ function closeCartDrawer() {
   document.getElementById('cartOverlay').classList.remove('active');
 }
 
-// --- MODALS & NAVIGATION ---
 function setupNavigation() {
   const filterBtns = document.querySelectorAll('.filter-btn');
   filterBtns.forEach(btn => {
@@ -573,7 +581,6 @@ function setupModals() {
   if (closeCartBtn) closeCartBtn.addEventListener('click', closeCartDrawer);
   if (cartOverlay) cartOverlay.addEventListener('click', closeCartDrawer);
 
-  // Visiting card modal
   const openCardModal = document.getElementById('openCardModal');
   const cardModal = document.getElementById('cardModal');
   const closeCardModal = document.getElementById('closeCardModal');
@@ -583,7 +590,6 @@ function setupModals() {
     closeCardModal.addEventListener('click', () => cardModal.classList.remove('active'));
   }
 
-  // Checkout modal
   const checkoutBtn = document.getElementById('checkoutBtn');
   const checkoutModal = document.getElementById('checkoutModal');
   const closeCheckoutModal = document.getElementById('closeCheckoutModal');
@@ -604,7 +610,6 @@ function setupModals() {
     });
   }
 
-  // Handle Checkout Submit
   const orderCheckoutForm = document.getElementById('orderCheckoutForm');
   if (orderCheckoutForm) {
     orderCheckoutForm.addEventListener('submit', (e) => {
@@ -613,7 +618,6 @@ function setupModals() {
     });
   }
 
-  // Reset Order
   const resetOrderBtn = document.getElementById('resetOrderBtn');
   if (resetOrderBtn) {
     resetOrderBtn.addEventListener('click', () => {
@@ -626,7 +630,6 @@ function setupModals() {
     });
   }
 
-  // Product quick view close
   const closeProductModalBtn = document.getElementById('closeProductModal');
   if (closeProductModalBtn) {
     closeProductModalBtn.addEventListener('click', () => {
@@ -683,7 +686,6 @@ function openProductModal(productId) {
   document.getElementById('productModal').classList.add('active');
 }
 
-// --- CHECKOUT & INVOICE GENERATOR ---
 function populateCheckoutSummary() {
   const chkItemCount = document.getElementById('chkItemCount');
   const chkTotalBDT = document.getElementById('chkTotalBDT');
@@ -740,7 +742,6 @@ function generateInvoice() {
   document.getElementById('invoiceStep').style.display = 'block';
 }
 
-// --- AUTOMATED MESSAGING & CHAT BOT SYSTEM ---
 function setupChatBot() {
   const toggleBtn = document.getElementById('chatToggleBtn');
   const closeBtn = document.getElementById('closeChatBtn');
@@ -753,7 +754,6 @@ function setupChatBot() {
     closeBtn.addEventListener('click', () => chatWindow.classList.remove('active'));
   }
 
-  // Quick pill clicks
   document.querySelectorAll('.quick-pill').forEach(pill => {
     pill.addEventListener('click', (e) => {
       const queryType = e.target.dataset.query;
@@ -786,14 +786,12 @@ function getQuickText(type) {
 function handleUserQuery(userText, directType = null) {
   const chatMessages = document.getElementById('chatMessages');
 
-  // Append user message
   const userBubble = document.createElement('div');
   userBubble.className = 'chat-bubble user-msg';
   userBubble.textContent = userText;
   chatMessages.appendChild(userBubble);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 
-  // Bot thinking simulation
   setTimeout(() => {
     const botReply = generateBotResponse(userText, directType);
     const botBubble = document.createElement('div');
@@ -809,7 +807,7 @@ function generateBotResponse(text, type = null) {
 
   if (type === 'rate' || lower.includes('দাম') || lower.includes('রেট') || lower.includes('সোনা') || lower.includes('ভরি')) {
     return `
-      <strong>আজকের অটো-আপডেটেড সোনার দর (BDT):</strong><br>
+      <strong>আজকের ১ ঘণ্টার অটো-আপডেটেড সোনার দর (BDT):</strong><br>
       🏆 <strong>২২ ক্যারেট:</strong> ${formatBDT(DYNAMIC_GOLD_RATES[22].vori)} / ভরি (${formatBDT(DYNAMIC_GOLD_RATES[22].gram)} / গ্রাম)<br>
       ⭐ <strong>২১ ক্যারেট:</strong> ${formatBDT(DYNAMIC_GOLD_RATES[21].vori)} / ভরি (${formatBDT(DYNAMIC_GOLD_RATES[21].gram)} / গ্রাম)<br>
       ✨ <strong>১৮ ক্যারেট:</strong> ${formatBDT(DYNAMIC_GOLD_RATES[18].vori)} / ভরি<br>
@@ -855,7 +853,6 @@ function generateBotResponse(text, type = null) {
     `;
   }
 
-  // General automated offline reply if no active representative is present
   return `
     ধন্যবাদ <strong>জসিম জুয়েলার্সে</strong> মেসেজ পাঠানোর জন্য! 🌟<br><br>
     বর্তমানে আমাদের অনলাইন শপ প্রতিনিধি ও প্রোপ্রাইটর <strong>মোঃ জসিম উদ্দিন ভূঁইয়া</strong> অফলাইনে আছেন। আপনার মেসেজটি সফলভাবে পাওয়া গেছে।<br><br>
