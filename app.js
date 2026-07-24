@@ -563,6 +563,27 @@ function setupNavigation() {
     });
   });
 
+  // Smooth scroll without changing address bar URL (#)
+  const navLinks = document.querySelectorAll('.nav-link, .footer-links a, .brand-logo');
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const targetId = link.getAttribute('href');
+      if (targetId && targetId.startsWith('#')) {
+        e.preventDefault();
+        const targetSection = document.querySelector(targetId);
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth' });
+          
+          // Update active state
+          document.querySelectorAll('.nav-link').forEach(nl => nl.classList.remove('active'));
+          if (link.classList.contains('nav-link')) {
+            link.classList.add('active');
+          }
+        }
+      }
+    });
+  });
+
   const mobileBtn = document.getElementById('mobileMenuBtn');
   const navMenu = document.getElementById('navMenu');
   if (mobileBtn && navMenu) {
